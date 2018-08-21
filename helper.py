@@ -113,10 +113,10 @@ def gen_batch_function(data_folder, image_shape):
                 gt_images.append(gt_image)
 
             # random mirroring
-            images,gt_images = image_mirroring(np.array(images), np.array(gt_images))
+            #images,gt_images = image_mirroring(np.array(images), np.array(gt_images))
 
-            yield images,gt_images
-            #yield np.array(images), np.array(gt_images)
+            #yield images,gt_images
+            yield np.array(images), np.array(gt_images)
 
     return get_batches_fn
 
@@ -206,7 +206,7 @@ def graph_visualize():
 
             g_in = tf.import_graph_def(sm.meta_graphs[0].graph_def)
 
-    LOGDIR = '.'
+    LOGDIR = './model_log/'
     train_writer = tf.summary.FileWriter(LOGDIR)
     train_writer.add_graph(sess.graph)
     train_writer.flush()

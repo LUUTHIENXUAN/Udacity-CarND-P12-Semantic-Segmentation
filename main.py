@@ -262,6 +262,10 @@ def train_nn(sess, epochs, batch_size,
     plot_losses, plot_samples = [], []
     sample = 0
 
+    # Logging data for TensorBoard
+    _ =  tf.summary.scalar('loss', cross_entropy_loss)
+    writer = tf.summary.FileWriter('./graph_log/', graph_def=sess.graph_def)
+
     for epoch in range(epochs):
 
         losses, i = [], 0
@@ -301,6 +305,13 @@ def train_nn(sess, epochs, batch_size,
         print("epoch: ", epoch + 1, " of ", epochs, "training loss: ", training_loss)
         print("------------------")
 
+        # Write log to TensorBoard
+        summary_str = sess.run(tf.summary.merge_all(), feed_dict={input_image: image,
+                                                                    correct_label:label,
+                                                                    keep_prob:0.75,
+                                                                    learning_rate:0.0001})
+        writer.add_summary(summary_str, epoch)
+
 
     plt.plot(plot_samples, plot_losses, 'k-', label= "Train Loss")
     #plt.plot(plot_samples, all_training_losses,'r--', label = "Average Loss")
@@ -329,7 +340,7 @@ def run():
     # You'll need a GPU with at least 10 teraFLOPS to train on.
     #  https://www.cityscapes-dataset.com/
 
-    epochs     = 50
+    epochs     = 20
     batch_size = 8
 
     # Allocate fixed memory
